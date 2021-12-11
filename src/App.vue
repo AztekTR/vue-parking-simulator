@@ -62,7 +62,7 @@ const pushRandomCar = () => {
 };
 
 onMounted(() => {
-  setInterval(pushRandomCar, 10);
+  setInterval(pushRandomCar, 100);
 });
 </script>
 
@@ -72,10 +72,10 @@ onMounted(() => {
   margin: 0;
   box-sizing: border-box;
 }
-#app {
+body {
   background-color: #7a7a7a;
-  height: 100vh;
+  min-height: 100vh;
+  min-width: 100vw;
   color: #000;
-  overflow: hidden;
 }
 </style>

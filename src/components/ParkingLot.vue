@@ -4,10 +4,11 @@
       class="parking-lot parking-lot--reversed"
       :style="`width:${(parkingLot.capacity / 2) * 140 + 10}px`"
     >
-      <Car v-for="car in topCars" :color="car.color" />
+      <Car v-for="car in topCars" :car="car" :reversed="true"/>
       <Car
         v-for="index in parkingLot.capacity / 2 - topCars.length"
-        :color="'#fff'"
+        :car="markup"
+        :reversed="true"
         :key="index"
         :transparent="true"
       />
@@ -16,10 +17,10 @@
       class="parking-lot"
       :style="`width:${(parkingLot.capacity / 2) * 140 + 10}px`"
     >
-      <Car v-for="car in bottomCars" :color="car.color" />
+      <Car v-for="car in bottomCars" :car="car" />
       <Car
         v-for="index in parkingLot.capacity / 2 - bottomCars.length"
-        :color="'#fff'"
+        :car="markup"
         :key="index"
         :transparent="true"
       />
@@ -35,6 +36,8 @@ import { toRef, toRefs, computed } from "vue";
 
 const props = defineProps<{ parkingLot: IParkingLot }>();
 const { parkingLot } = toRefs(props);
+
+const markup = {color:"#fff", model: 'markup'}
 
 const topCars = computed(() =>
   parkingLot.value.cars.slice(0, parkingLot.value.capacity / 2)
@@ -58,8 +61,8 @@ const bottomCars = computed(() =>
 
   &__container {
     margin-left: 15px;
-    margin-bottom: 100px;
-    margin-top: 20px;
+    margin-bottom: 40px;
+    margin-top: 80px;
   }
 
   &--reversed {
