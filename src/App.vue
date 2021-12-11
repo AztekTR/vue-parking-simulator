@@ -1,9 +1,6 @@
 <template>
   <div style="display: flex; flex-direction: column">
-    <ParkingLot
-      v-for="lot of parkingLots$"
-      :parking-lot="lot"
-    />
+    <ParkingLot v-for="lot of parkingLots$" :parking-lot="lot" />
   </div>
 </template>
 
@@ -28,8 +25,7 @@ const parkingLots: IParkingLot[] = reactive([
   },
 ]);
 
-const generateColor = (): string =>
-  "#" + Math.floor(Math.random() * 16777215).toString(16);
+const parkingLots$ = computed(() => parkingLots);
 
 const models: string[] = [
   "BMW",
@@ -44,25 +40,40 @@ const models: string[] = [
   "Mercedes",
 ];
 
-const parkingLots$ = computed(() => parkingLots);
+const colors: string[] = [
+  "#0e0075",
+  "#005091",
+  "#616161",
+  "#343434",
+  "#1a1a1a",
+  "#1a1a1a",
+  "#1a1a1a",
+  "#ededed",
+  "#ededed",
+  "#ededed",
+  "#999999",
+  "#999999",
+  "#c40000",
+  "#06b000",
+];
 
 const randint = (int: number) => ~~(Math.random() * int);
 
 const pushRandomCar = () => {
-  const parkingLot = parkingLots[randint(parkingLots.length)]
+  const parkingLot = parkingLots[randint(parkingLots.length)];
 
   if (parkingLot.cars.length >= parkingLot.capacity) {
     return;
   }
 
   parkingLot.cars.push({
-    color: generateColor(),
+    color: colors[randint(colors.length)],
     model: models[randint(models.length)],
   });
 };
 
 onMounted(() => {
-  setInterval(pushRandomCar, 100);
+  setInterval(pushRandomCar, 50);
 });
 </script>
 
