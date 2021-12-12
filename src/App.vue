@@ -12,15 +12,15 @@ import { IParkingLot } from "./interfaces/ParkingLot";
 
 const parkingLots: IParkingLot[] = reactive([
   {
-    cars: [],
+    cars: Array(36).fill({ color: "#fff", model: "markup", makeYear: 0 }),
     capacity: 36,
   },
   {
-    cars: [],
+    cars: Array(36).fill({ color: "#fff", model: "markup", makeYear: 0 }),
     capacity: 36,
   },
   {
-    cars: [],
+    cars: Array(36).fill({ color: "#fff", model: "markup", makeYear: 0 }),
     capacity: 36,
   },
 ]);
@@ -57,23 +57,33 @@ const colors: string[] = [
   "#06b000",
 ];
 
-const randint = (int: number) => ~~(Math.random() * int);
+const randint = (max: number): number => ~~(Math.random() * max);
+const generateYear = () => randint(31) + 1990;
 
 const pushRandomCar = () => {
-  const parkingLot = parkingLots[randint(parkingLots.length)];
+  const randLotIndex = randint(parkingLots.length);
+  const parkingLot = parkingLots[randLotIndex];
+  const randCarIndex = randint(parkingLot.cars.length);
+  const car = parkingLot.cars[randCarIndex];
 
-  if (parkingLot.cars.length >= parkingLot.capacity) {
+  if (car.model !== "markup") {
     return;
   }
 
-  parkingLot.cars.push({
-    color: colors[randint(colors.length)],
+  const newCar = {
     model: models[randint(models.length)],
-  });
+    makeYear: generateYear(),
+    color: colors[randint(colors.length)],
+  };
+
+  const cars = [...parkingLot.cars];
+  cars[randCarIndex] = newCar;
+
+  parkingLots[randLotIndex] = {...parkingLots[randLotIndex], cars};
 };
 
 onMounted(() => {
-  setInterval(pushRandomCar, 50);
+  setInterval(pushRandomCar, 100);
 });
 </script>
 

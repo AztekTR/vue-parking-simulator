@@ -1,6 +1,0 @@
-cars at carPark is a array that contains all cars
-cars at parkingLot is a deck that contains only some cars
-
-we will have a search that will filter all cars and light the car with correct letter in its name
-we will have a capacity of a parking lot from which we will calculate its width 
-and we will have modals that will have information about the car or a parking lot

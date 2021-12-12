@@ -1,5 +1,5 @@
 <template>
-  <div class="car with-tooltip">
+  <div class="car" :class="transparent ? '' : 'with-tooltip'">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -19,19 +19,24 @@
         />
       </g>
     </svg>
-    <span class="tooltiptext" :class="reversed ? 'reversed' : ''"> {{ tooltipText }} </span>
+    <span class="tooltiptext" :class="reversed ? 'reversed' : ''">
+      {{ tooltipText }}
+    </span>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, toRefs } from "vue";
 import { ICar } from "../interfaces/Car";
 
 const props =
   defineProps<{ car: ICar; transparent?: boolean; reversed?: boolean }>();
-const { car } = props;
+const { car } = toRefs(props);
 
-const tooltipText = computed(() => `Model: ${car.model}\n Color: ${car.color}`);
+const tooltipText = computed(
+  () =>
+    `Model: ${car.value.model}\n Make year: ${car.value.makeYear} \n Color: ${car.value.color}`
+);
 </script>
 
 <style lang="scss" scoped>
