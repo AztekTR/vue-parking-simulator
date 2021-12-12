@@ -1,6 +1,6 @@
 <template>
   <div style="display: flex; flex-direction: column">
-    <ParkingLot v-for="lot: IParkingLot of parkingLots" :parking-lot="lot" />
+    <ParkingLot v-for="lot of parkingLots" :parking-lot="lot" />
   </div>
 </template>
 

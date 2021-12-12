@@ -5,7 +5,7 @@
       :style="`width:${(parkingLot.capacity / 2) * 140 + 10}px`"
     >
       <Car
-        v-for="car: ICar in topCars"
+        v-for="car in topCars"
         :car="car"
         :reversed="true"
         :transparent="car.model === 'markup'"
@@ -16,7 +16,7 @@
       :style="`width:${(parkingLot.capacity / 2) * 140 + 10}px`"
     >
       <Car
-        v-for="car: ICar in bottomCars"
+        v-for="car in bottomCars"
         :car="car"
         :transparent="car.model === 'markup'"
       />
