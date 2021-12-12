@@ -1,89 +1,66 @@
 <template>
   <div style="display: flex; flex-direction: column">
-    <ParkingLot v-for="lot of parkingLots$" :parking-lot="lot" />
+    <ParkingLot v-for="lot: IParkingLot of parkingLots" :parking-lot="lot" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive } from "vue";
+import { onMounted, reactive } from "vue";
 import ParkingLot from "./components/ParkingLot.vue";
 import { ICar } from "./interfaces/Car";
 import { IParkingLot } from "./interfaces/ParkingLot";
+import randint from "./utils/randint";
+import markupCar from "./constants/markup-car";
+import models from "./constants/car-models";
+import colors from "./constants/car-colors";
 
 const parkingLots: IParkingLot[] = reactive([
   {
-    cars: Array(36).fill({ color: "#fff", model: "markup", makeYear: 0 }),
+    cars: Array(36).fill(markupCar),
     capacity: 36,
   },
   {
-    cars: Array(36).fill({ color: "#fff", model: "markup", makeYear: 0 }),
+    cars: Array(36).fill(markupCar),
     capacity: 36,
   },
   {
-    cars: Array(36).fill({ color: "#fff", model: "markup", makeYear: 0 }),
+    cars: Array(36).fill(markupCar),
     capacity: 36,
   },
 ]);
 
-const parkingLots$ = computed(() => parkingLots);
+const replaceRandomCar =
+  (newCarCallback: () => ICar) =>
+  (noMarkupCar: boolean = true): void => {
+    const randLotIndex: number = randint(0, parkingLots.length);
+    const parkingLot: IParkingLot = parkingLots[randLotIndex];
+    const randCarIndex: number = randint(0, parkingLot.cars.length);
+    const car: ICar = parkingLot.cars[randCarIndex];
 
-const models: string[] = [
-  "BMW",
-  "Skoda",
-  "Ferrari",
-  "Porsche",
-  "Lada",
-  "Ford",
-  "Honda",
-  "Fiat",
-  "Volvo",
-  "Mercedes",
-];
+    if (noMarkupCar ? car.model !== "markup" : car.model === "markup") {
+      return;
+    }
 
-const colors: string[] = [
-  "#0e0075",
-  "#005091",
-  "#616161",
-  "#343434",
-  "#1a1a1a",
-  "#1a1a1a",
-  "#1a1a1a",
-  "#ededed",
-  "#ededed",
-  "#ededed",
-  "#999999",
-  "#999999",
-  "#c40000",
-  "#06b000",
-];
+    const newCar: ICar = newCarCallback();
 
-const randint = (max: number): number => ~~(Math.random() * max);
-const generateYear = () => randint(31) + 1990;
+    const cars: ICar[] = [...parkingLot.cars];
+    cars[randCarIndex] = newCar;
 
-const pushRandomCar = () => {
-  const randLotIndex = randint(parkingLots.length);
-  const parkingLot = parkingLots[randLotIndex];
-  const randCarIndex = randint(parkingLot.cars.length);
-  const car = parkingLot.cars[randCarIndex];
-
-  if (car.model !== "markup") {
-    return;
-  }
-
-  const newCar = {
-    model: models[randint(models.length)],
-    makeYear: generateYear(),
-    color: colors[randint(colors.length)],
+    parkingLots[randLotIndex] = { ...parkingLots[randLotIndex], cars };
   };
 
-  const cars = [...parkingLot.cars];
-  cars[randCarIndex] = newCar;
-
-  parkingLots[randLotIndex] = {...parkingLots[randLotIndex], cars};
-};
+const pushRandomCar = replaceRandomCar(() => {
+  return {
+    model: models[randint(0, models.length)],
+    makeYear: randint(1990, 2021),
+    color: colors[randint(0, colors.length)],
+  };
+});
+const deleteRandomCar = replaceRandomCar(() => markupCar);
 
 onMounted(() => {
   setInterval(pushRandomCar, 100);
+  setInterval(deleteRandomCar, 200);
 });
 </script>
 
@@ -100,3 +77,43 @@ body {
   color: #000;
 }
 </style>
+
+<!-- const pushRandomCar = () => {
+  const randLotIndex: number = randint(0, parkingLots.length);
+  const parkingLot: IParkingLot = parkingLots[randLotIndex];
+  const randCarIndex: number = randint(0, parkingLot.cars.length);
+  const car: ICar = parkingLot.cars[randCarIndex];
+
+  if (car.model !== "markup") {
+    return;
+  }
+
+  const newCar: ICar = {
+    model: models[randint(0, models.length)],
+    makeYear: randint(1990, 2021),
+    color: colors[randint(0, colors.length)],
+  };
+
+  const cars: ICar[] = [...parkingLot.cars];
+  cars[randCarIndex] = newCar;
+
+  parkingLots[randLotIndex] = { ...parkingLots[randLotIndex], cars };
+};
+
+const deleteRandomCar = () => {
+  const randLotIndex = randint(0, parkingLots.length);
+  const parkingLot = parkingLots[randLotIndex];
+  const randCarIndex = randint(0, parkingLot.cars.length);
+  const car = parkingLot.cars[randCarIndex];
+
+  if (car.model === "markup") {
+    return;
+  }
+
+  const newCar = markupCar;
+
+  const cars = [...parkingLot.cars];
+  cars[randCarIndex] = newCar;
+
+  parkingLots[randLotIndex] = { ...parkingLots[randLotIndex], cars };
+}; -->
