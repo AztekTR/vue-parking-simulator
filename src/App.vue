@@ -1,11 +1,13 @@
 <template>
   <div style="display: flex; flex-direction: column">
     <ParkingLot v-for="lot of parkingLots" :parking-lot="lot" />
+    <SideBarSearch :parking-lots="parkingLots"/>
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, reactive } from "vue";
+import SideBarSearch from "./components/SideBarSearch/SideBarSearch.vue";
 import ParkingLot from "./components/ParkingLot.vue";
 import { ICar } from "./interfaces/Car";
 import { IParkingLot } from "./interfaces/ParkingLot";
@@ -17,30 +19,31 @@ import colors from "./constants/car-colors";
 const parkingLots: IParkingLot[] = reactive([
   {
     cars: Array(36).fill(markupCar),
-    capacity: 36,
   },
   {
     cars: Array(36).fill(markupCar),
-    capacity: 36,
   },
   {
     cars: Array(36).fill(markupCar),
-    capacity: 36,
   },
 ]);
 
 const replaceRandomCar =
-  (newCarCallback: () => ICar, noMarkupCar: boolean) => () => {
+  (newCarFactory: () => ICar, noMarkupCar: boolean) => () => {
     const randLotIndex: number = randint(0, parkingLots.length);
     const parkingLot: IParkingLot = parkingLots[randLotIndex];
     const randCarIndex: number = randint(0, parkingLot.cars.length);
     const car: ICar = parkingLot.cars[randCarIndex];
 
-    if (noMarkupCar ? car.model !== "markup" : car.model === "markup") {
+    if (
+      noMarkupCar
+        ? car.model !== markupCar.model
+        : car.model === markupCar.model
+    ) {
       return;
     }
 
-    const newCar: ICar = newCarCallback();
+    const newCar: ICar = newCarFactory();
 
     const cars: ICar[] = [...parkingLot.cars];
     cars[randCarIndex] = newCar;

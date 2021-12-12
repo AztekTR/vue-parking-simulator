@@ -2,5 +2,4 @@ import { ICar } from "./Car";
 
 export interface IParkingLot {
     cars: ICar[],
-    capacity: number;
 }
