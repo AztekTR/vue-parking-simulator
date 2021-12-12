@@ -30,8 +30,7 @@ const parkingLots: IParkingLot[] = reactive([
 ]);
 
 const replaceRandomCar =
-  (newCarCallback: () => ICar) =>
-  (noMarkupCar: boolean = true): void => {
+  (newCarCallback: () => ICar, noMarkupCar: boolean) => () => {
     const randLotIndex: number = randint(0, parkingLots.length);
     const parkingLot: IParkingLot = parkingLots[randLotIndex];
     const randCarIndex: number = randint(0, parkingLot.cars.length);
@@ -55,12 +54,12 @@ const pushRandomCar = replaceRandomCar(() => {
     makeYear: randint(1990, 2021),
     color: colors[randint(0, colors.length)],
   };
-});
-const deleteRandomCar = replaceRandomCar(() => markupCar);
+}, true);
+const deleteRandomCar = replaceRandomCar(() => markupCar, false);
 
 onMounted(() => {
   setInterval(pushRandomCar, 100);
-  setInterval(deleteRandomCar, 200);
+  setInterval(deleteRandomCar, 175);
 });
 </script>
 
@@ -77,43 +76,3 @@ body {
   color: #000;
 }
 </style>
-
-<!-- const pushRandomCar = () => {
-  const randLotIndex: number = randint(0, parkingLots.length);
-  const parkingLot: IParkingLot = parkingLots[randLotIndex];
-  const randCarIndex: number = randint(0, parkingLot.cars.length);
-  const car: ICar = parkingLot.cars[randCarIndex];
-
-  if (car.model !== "markup") {
-    return;
-  }
-
-  const newCar: ICar = {
-    model: models[randint(0, models.length)],
-    makeYear: randint(1990, 2021),
-    color: colors[randint(0, colors.length)],
-  };
-
-  const cars: ICar[] = [...parkingLot.cars];
-  cars[randCarIndex] = newCar;
-
-  parkingLots[randLotIndex] = { ...parkingLots[randLotIndex], cars };
-};
-
-const deleteRandomCar = () => {
-  const randLotIndex = randint(0, parkingLots.length);
-  const parkingLot = parkingLots[randLotIndex];
-  const randCarIndex = randint(0, parkingLot.cars.length);
-  const car = parkingLot.cars[randCarIndex];
-
-  if (car.model === "markup") {
-    return;
-  }
-
-  const newCar = markupCar;
-
-  const cars = [...parkingLot.cars];
-  cars[randCarIndex] = newCar;
-
-  parkingLots[randLotIndex] = { ...parkingLots[randLotIndex], cars };
-}; -->
